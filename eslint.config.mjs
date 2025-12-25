@@ -164,7 +164,6 @@ const eslintConfig = defineConfig([
             "no-multi-assign": "error",
             "no-multi-str": "error",
             "no-negated-condition": "error",
-            "no-nested-ternary": "error",
             "no-nonoctal-decimal-escape": "error",
             "no-octal": "error",
             "no-octal-escape": "error",
