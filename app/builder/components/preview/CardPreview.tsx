@@ -3,7 +3,7 @@
 import { useBuilderStore } from "@/builder/state/builder-store";
 
 export function CardPreview() {
-    const { bgColor, textColor, radius, padding } = useBuilderStore();
+    const { bgColor, textColor, radius, padding, fontSize } = useBuilderStore();
 
     return (
         <div
@@ -12,6 +12,7 @@ export function CardPreview() {
                 backgroundColor: bgColor,
                 borderRadius: radius,
                 color: textColor,
+                fontSize: fontSize,
                 padding: padding,
             }}
         >
