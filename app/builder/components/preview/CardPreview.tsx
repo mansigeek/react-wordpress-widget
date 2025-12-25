@@ -1,24 +1,22 @@
 "use client";
 
 import { useBuilderStore } from "@/builder/state/builder-store";
+import { generateBodyClasses, generateCardClasses, generateTitleClasses } from "@/builder/utils/class-generator";
 
 export function CardPreview() {
-    const { bgColor, textColor, radius, padding } = useBuilderStore();
+    const styles = useBuilderStore();
+
+    const cardClasses = generateCardClasses(styles);
+    const titleClasses = generateTitleClasses(styles);
+    const bodyClasses = generateBodyClasses(styles);
 
     return (
-        <div
-            className="border max-w-md transition-all w-full"
-            style={{
-                backgroundColor: bgColor,
-                borderRadius: radius,
-                color: textColor,
-                padding: padding,
-            }}
-        >
-            <h4 className="font-semibold mb-2 text-lg">Card Title</h4>
+        <div className={cardClasses}>
+            <h4 className={titleClasses}>Card Title</h4>
 
-            <p className="leading-relaxed opacity-90 text-sm">
-                This is a preview card. Styles applied here will be exported exactly the same into WordPress.
+            <p className={bodyClasses}>
+                This is a preview card. Styles applied here will be exported exactly the same into WordPress. All styles
+                are using Tailwind CSS classes for better SEO and performance.
             </p>
         </div>
     );

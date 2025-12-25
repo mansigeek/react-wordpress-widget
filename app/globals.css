@@ -125,6 +125,7 @@
   }
 }
 
-.test-prefix {
-  user-select: none;
+
+button {
+  @apply cursor-pointer;
 }

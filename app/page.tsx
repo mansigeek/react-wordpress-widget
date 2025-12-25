@@ -1,3 +1,4 @@
+import { WordPressIntegrationSheet } from "./builder/components/integration/WordPressIntegrationSheet";
 import { PreviewCanvas } from "./builder/components/preview/PreviewCanvas";
 import { Sidebar } from "./builder/components/sidebar/Sidebar";
 
@@ -6,6 +7,7 @@ export default function Home() {
         <main className="grid grid-cols-[auto_1fr] min-h-screen">
             <Sidebar />
             <PreviewCanvas />
+            <WordPressIntegrationSheet />
         </main>
     );
 }
