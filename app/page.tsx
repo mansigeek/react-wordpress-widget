@@ -1,3 +1,11 @@
+import { PreviewCanvas } from "./builder/components/preview/PreviewCanvas";
+import { Sidebar } from "./builder/components/sidebar/Sidebar";
+
 export default function Home() {
-    return <h1>Hello World</h1>;
+    return (
+        <main className="grid grid-cols-[auto_1fr] min-h-screen">
+            <Sidebar />
+            <PreviewCanvas />
+        </main>
+    );
 }
