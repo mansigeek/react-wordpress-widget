@@ -11,4 +11,3 @@ export default function imageLoader({ src, width, quality }: { quality?: number;
     // Otherwise, return the src (for local images)
     return src;
 }
-

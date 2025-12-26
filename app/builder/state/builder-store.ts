@@ -99,6 +99,10 @@ export const useBuilderStore = create<CardStyleState>(set => {
 
         padding: { unit: "px", value: 24 },
 
+        setAuthor: author => {
+            return set({ author });
+        },
+
         /* Actions */
         setBackgroundColor: backgroundColor => {
             return set({ backgroundColor });
@@ -106,10 +110,6 @@ export const useBuilderStore = create<CardStyleState>(set => {
 
         setBodyFontSize: bodyFontSize => {
             return set({ bodyFontSize });
-        },
-
-        setAuthor: author => {
-            return set({ author });
         },
 
         setBorderColor: borderColor => {
@@ -160,19 +160,13 @@ export const useBuilderStore = create<CardStyleState>(set => {
             return set({ showBorder });
         },
 
-        shadow: "md",
-
         setShowButton: showButton => {
             return set({ showButton });
         },
 
-        showBorder: false,
-
         setShowImage: showImage => {
             return set({ showImage });
         },
-
-        textColor: "#111827",
 
         setSubtitle: subtitle => {
             return set({ subtitle });
@@ -185,22 +179,35 @@ export const useBuilderStore = create<CardStyleState>(set => {
         setTextColor: textColor => {
             return set({ textColor });
         },
-        /* Content defaults */
-        title: "Premium Card Title",
+
         setTitle: title => {
             return set({ title });
         },
-        titleFontSize: 24,
+
         setTitleFontSize: titleFontSize => {
             return set({ titleFontSize });
         },
-        titleFontWeight: 700,
+
         setTitleFontWeight: titleFontWeight => {
             return set({ titleFontWeight });
         },
+
+        shadow: "md",
+
+        showBorder: false,
+
         showButton: true,
-        subtitle: "Beautiful & Modern Design",
+
         showImage: true,
+
+        subtitle: "Beautiful & Modern Design",
+
         tags: "Design, Premium, Modern",
+
+        textColor: "#111827",
+        /* Content defaults */
+        title: "Premium Card Title",
+        titleFontSize: 24,
+        titleFontWeight: 700,
     };
 });
