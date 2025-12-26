@@ -1,9 +1,11 @@
 "use client";
 
 import { Calendar, User } from "lucide-react";
+import Image from "next/image";
 
 import { useBuilderStore } from "@/builder/state/builder-store";
 import { registerStyle } from "@/builder/utils/style-registry";
+import imageLoader from "@/lib/image-loader";
 
 export function CardPreview() {
     const {
@@ -153,7 +155,14 @@ export function CardPreview() {
         <>
             <div className={cardClass}>
                 {showImage && imageUrl && (
-                    <img alt={title} className={imageClass} height={250} src={imageUrl || ""} width={320} />
+                    <Image
+                        alt={title}
+                        className={imageClass}
+                        height={250}
+                        loader={imageLoader}
+                        src={imageUrl || ""}
+                        width={800}
+                    />
                 )}
                 {subtitle && <div className={subtitleClass}>{subtitle}</div>}
 
