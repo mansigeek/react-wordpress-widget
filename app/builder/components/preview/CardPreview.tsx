@@ -13,10 +13,24 @@ export function CardPreview() {
         showBorder,
         borderWidth,
         borderColor,
+        fontFamily,
         titleFontSize,
         titleFontWeight,
         bodyFontSize,
     } = useBuilderStore();
+
+    const getFontFamilyValue = () => {
+        switch (fontFamily) {
+            case "serif":
+                return "serif";
+            case "sans-serif":
+                return "sans-serif";
+            case "monospace":
+                return "monospace";
+            default:
+                return "inherit";
+        }
+    };
 
     const cardClass = registerStyle({
         backgroundColor,
@@ -28,6 +42,7 @@ export function CardPreview() {
             : shadow === "md" ? "0 4px 6px rgba(0,0,0,0.1)"
             : "0 10px 15px rgba(0,0,0,0.15)",
         color: textColor,
+        fontFamily: getFontFamilyValue(),
         maxWidth: "28rem",
         padding: `${padding.value}${padding.unit}`,
         transition: "all 150ms ease",

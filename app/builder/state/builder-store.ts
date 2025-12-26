@@ -29,6 +29,7 @@ interface CardStyleState {
     borderColor: string;
 
     /* Typography */
+    fontFamily: "default" | "serif" | "sans-serif" | "monospace";
     titleFontSize: number;
     titleFontWeight: number;
     bodyFontSize: number;
@@ -46,6 +47,7 @@ interface CardStyleState {
     setBorderWidth: (value: number) => void;
     setBorderColor: (value: string) => void;
 
+    setFontFamily: (value: CardStyleState["fontFamily"]) => void;
     setTitleFontSize: (value: number) => void;
     setTitleFontWeight: (value: number) => void;
     setBodyFontSize: (value: number) => void;
@@ -58,6 +60,7 @@ export const useBuilderStore = create<CardStyleState>(set => {
         borderColor: "#e5e7eb",
         borderRadius: { unit: "px", value: 12 },
         borderWidth: 1,
+        fontFamily: "default",
         padding: { unit: "px", value: 16 },
         setBackgroundColor: backgroundColor => {
             return set({ backgroundColor });
@@ -73,6 +76,9 @@ export const useBuilderStore = create<CardStyleState>(set => {
         },
         setBorderWidth: borderWidth => {
             return set({ borderWidth });
+        },
+        setFontFamily: fontFamily => {
+            return set({ fontFamily });
         },
         setPadding: padding => {
             return set({ padding });

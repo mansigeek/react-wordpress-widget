@@ -16,6 +16,7 @@ export function Sidebar() {
         showBorder,
         borderWidth,
         borderColor,
+        fontFamily,
         titleFontSize,
         titleFontWeight,
         bodyFontSize,
@@ -27,6 +28,7 @@ export function Sidebar() {
         setShowBorder,
         setBorderWidth,
         setBorderColor,
+        setFontFamily,
         setTitleFontSize,
         setTitleFontWeight,
         setBodyFontSize,
@@ -137,7 +139,7 @@ export function Sidebar() {
             <div className="space-y-2">
                 <Label>Shadow</Label>
                 <Select onValueChange={setShadow} value={shadow}>
-                    <SelectTrigger>
+                    <SelectTrigger className="w-full">
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -191,6 +193,22 @@ export function Sidebar() {
                     </div>
                 </>
             )}
+
+            {/* Font Family */}
+            <div className="space-y-2">
+                <Label>Font Family</Label>
+                <Select onValueChange={setFontFamily} value={fontFamily}>
+                    <SelectTrigger className="w-full">
+                        <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="default">Default</SelectItem>
+                        <SelectItem value="serif">Serif</SelectItem>
+                        <SelectItem value="sans-serif">Sans Serif</SelectItem>
+                        <SelectItem value="monospace">Monospace</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
 
             {/* Title Font Size */}
             <div className="space-y-2">

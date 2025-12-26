@@ -11,49 +11,55 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 
 export function WordPressIntegrationSheet() {
     const [open, setOpen] = React.useState(false);
-    const [script, setScript] = React.useState("");
+    const [loading, setLoading] = React.useState(false);
     const [generated, setGenerated] = React.useState(false);
+    const [scriptTag, setScriptTag] = React.useState("");
 
-    function handleGenerate() {
+    async function handleGenerate() {
         try {
-            const output = generateWidgetScript();
-            setScript(output);
+            setLoading(true);
+
+            const script = generateWidgetScript();
+
+            const res = await fetch("/api/publish-widget", {
+                body: JSON.stringify({ script }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                method: "POST",
+            });
+
+            if (!res.ok) {
+                throw new Error("Publish failed");
+            }
+
+            const data = await res.json();
+
+            setScriptTag(data.scriptTag);
             setGenerated(true);
-            toast.success("Widget script generated");
+
+            toast.success("Widget published to CDN");
         } catch (error) {
             // eslint-disable-next-line no-console
             console.error(error);
-            toast.error("Failed to generate script");
+            toast.error("Failed to generate widget");
+        } finally {
+            setLoading(false);
         }
     }
 
     function handleCopy() {
-        navigator.clipboard.writeText(script);
-        toast.success("Script copied to clipboard");
+        navigator.clipboard.writeText(scriptTag);
+        toast.success("Script tag copied");
     }
 
-    function handleDownload() {
-        const blob = new Blob([script], {
-            type: "application/javascript",
-        });
-        const url = URL.createObjectURL(blob);
+    function handleSheetClose(isOpen: boolean) {
+        setOpen(isOpen);
 
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "auto-connect-widget.js";
-        a.click();
-
-        URL.revokeObjectURL(url);
-        toast.success("Widget downloaded");
-    }
-
-    function handleSheetClose(open: boolean) {
-        setOpen(open);
-
-        // Reset state when closing sheet
-        if (!open) {
-            setScript("");
+        if (!isOpen) {
             setGenerated(false);
+            setScriptTag("");
+            setLoading(false);
         }
     }
 
@@ -80,8 +86,8 @@ export function WordPressIntegrationSheet() {
 
                     {/* Generate */}
                     {!generated && (
-                        <Button className="w-full" onClick={handleGenerate}>
-                            Generate Script
+                        <Button className="w-full" disabled={loading} onClick={handleGenerate}>
+                            {loading ? "Publishing..." : "Generate & Publish"}
                         </Button>
                     )}
 
@@ -89,20 +95,18 @@ export function WordPressIntegrationSheet() {
                     {generated && (
                         <div className="space-y-4">
                             <div className="border leading-relaxed p-4 rounded-md text-sm">
-                                ✅ Your widget script is ready.
+                                ✅ Your widget is live on CDN.
                                 <br />
-                                Copy it or download the file and paste it into your WordPress site.
+                                Copy the script tag below and paste it into WordPress.
                             </div>
 
-                            <div className="flex gap-3">
-                                <Button className="flex-1" onClick={handleCopy}>
-                                    Copy Script
-                                </Button>
-
-                                <Button className="flex-1" onClick={handleDownload} variant="outline">
-                                    Download .js
-                                </Button>
+                            <div className="bg-muted border break-all font-mono p-3 rounded-md text-xs">
+                                {scriptTag}
                             </div>
+
+                            <Button className="w-full" onClick={handleCopy}>
+                                Copy Script Tag
+                            </Button>
                         </div>
                     )}
                 </div>
