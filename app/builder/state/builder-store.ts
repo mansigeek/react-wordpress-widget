@@ -34,6 +34,19 @@ interface CardStyleState {
     titleFontWeight: number;
     bodyFontSize: number;
 
+    /* Content */
+    title: string;
+    subtitle: string;
+    description: string;
+    author: string;
+    date: string;
+    tags: string;
+    imageUrl: string;
+    showImage: boolean;
+    buttonText: string;
+    buttonLink: string;
+    showButton: boolean;
+
     /* Actions */
     setBackgroundColor: (value: string) => void;
     setTextColor: (value: string) => void;
@@ -51,57 +64,143 @@ interface CardStyleState {
     setTitleFontSize: (value: number) => void;
     setTitleFontWeight: (value: number) => void;
     setBodyFontSize: (value: number) => void;
+
+    setTitle: (value: string) => void;
+    setSubtitle: (value: string) => void;
+    setDescription: (value: string) => void;
+    setAuthor: (value: string) => void;
+    setDate: (value: string) => void;
+    setTags: (value: string) => void;
+    setImageUrl: (value: string) => void;
+    setShowImage: (value: boolean) => void;
+    setButtonText: (value: string) => void;
+    setButtonLink: (value: string) => void;
+    setShowButton: (value: boolean) => void;
 }
 
 export const useBuilderStore = create<CardStyleState>(set => {
     return {
-        backgroundColor: "#f3f4f6",
+        author: "John Doe",
+        backgroundColor: "#ffffff",
         bodyFontSize: 14,
         borderColor: "#e5e7eb",
-        borderRadius: { unit: "px", value: 12 },
+        borderRadius: { unit: "px", value: 16 },
         borderWidth: 1,
+        buttonLink: "#",
+        buttonText: "Learn More",
+        date: "March 15, 2024",
+        description:
+            "This is a premium card component with customizable content. You can edit all fields including title, subtitle, description, author information, date, tags, and call-to-action button.",
+
         fontFamily: "default",
-        padding: { unit: "px", value: 16 },
+
+        imageUrl:
+            "https://images.unsplash.com/photo-1551290470-554bf3a4fa80?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+
+        padding: { unit: "px", value: 24 },
+
+        /* Actions */
         setBackgroundColor: backgroundColor => {
             return set({ backgroundColor });
         },
+
         setBodyFontSize: bodyFontSize => {
             return set({ bodyFontSize });
         },
+
+        setAuthor: author => {
+            return set({ author });
+        },
+
         setBorderColor: borderColor => {
             return set({ borderColor });
         },
+
         setBorderRadius: borderRadius => {
             return set({ borderRadius });
         },
+
         setBorderWidth: borderWidth => {
             return set({ borderWidth });
         },
+
+        setButtonLink: buttonLink => {
+            return set({ buttonLink });
+        },
+
+        setButtonText: buttonText => {
+            return set({ buttonText });
+        },
+
+        setDate: date => {
+            return set({ date });
+        },
+
+        setDescription: description => {
+            return set({ description });
+        },
+
         setFontFamily: fontFamily => {
             return set({ fontFamily });
         },
+
+        setImageUrl: imageUrl => {
+            return set({ imageUrl });
+        },
+
         setPadding: padding => {
             return set({ padding });
         },
+
         setShadow: shadow => {
             return set({ shadow });
         },
+
         setShowBorder: showBorder => {
             return set({ showBorder });
         },
+
+        shadow: "md",
+
+        setShowButton: showButton => {
+            return set({ showButton });
+        },
+
+        showBorder: false,
+
+        setShowImage: showImage => {
+            return set({ showImage });
+        },
+
+        textColor: "#111827",
+
+        setSubtitle: subtitle => {
+            return set({ subtitle });
+        },
+
+        setTags: tags => {
+            return set({ tags });
+        },
+
         setTextColor: textColor => {
             return set({ textColor });
         },
+        /* Content defaults */
+        title: "Premium Card Title",
+        setTitle: title => {
+            return set({ title });
+        },
+        titleFontSize: 24,
         setTitleFontSize: titleFontSize => {
             return set({ titleFontSize });
         },
+        titleFontWeight: 700,
         setTitleFontWeight: titleFontWeight => {
             return set({ titleFontWeight });
         },
-        shadow: "sm",
-        showBorder: false,
-        textColor: "#111827",
-        titleFontSize: 18,
-        titleFontWeight: 600,
+        showButton: true,
+        subtitle: "Beautiful & Modern Design",
+        showImage: true,
+        tags: "Design, Premium, Modern",
     };
 });
