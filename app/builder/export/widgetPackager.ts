@@ -6,7 +6,7 @@ import { getPreviewHTML } from "./domSnapshot";
  */
 export function generateWidgetScript() {
     const html = getPreviewHTML("auto-connect-preview-root");
-    const css = getWidgetCSS();
+    const css = getWidgetCSS(html);
 
     if (!html.trim()) {
         throw new Error("Export failed: Preview HTML is empty");

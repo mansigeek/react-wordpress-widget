@@ -2,7 +2,11 @@ import hash from "object-hash";
 
 const styleSheetId = "__auto_connect_styles__";
 
-function getStyleSheet(): HTMLStyleElement {
+function getStyleSheet(): HTMLStyleElement | null {
+    if (typeof window === "undefined" || typeof document === "undefined") {
+        return null;
+    }
+
     let styleTag = document.getElementById(styleSheetId) as HTMLStyleElement | null;
 
     if (!styleTag) {
@@ -31,7 +35,7 @@ export function registerStyle(css: Record<string, string | number>) {
 
     const styleTag = getStyleSheet();
 
-    if (!styleTag.innerHTML.includes(className)) {
+    if (styleTag && !styleTag.innerHTML.includes(className)) {
         styleTag.innerHTML += `
 .${className} {
     ${cssObjectToString(css)}
