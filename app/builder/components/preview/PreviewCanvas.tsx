@@ -12,7 +12,9 @@ export function PreviewCanvas() {
                 </div>
 
                 <div className="border border-dashed flex justify-center p-10 rounded-md">
-                    <CardPreview />
+                    <div id="auto-connect-preview-root">
+                        <CardPreview />
+                    </div>
                 </div>
             </div>
         </section>

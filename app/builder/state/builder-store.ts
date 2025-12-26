@@ -1,68 +1,101 @@
 import { create } from "zustand";
 
-import { defaultCardStyles } from "../config/default-theme";
-import type {
-    BackgroundColor,
-    BorderColor,
-    BorderRadius,
-    BorderWidth,
-    CardStyleClasses,
-    FontSize,
-    FontWeight,
-    Padding,
-    Shadow,
-    TextColor,
-} from "../utils/class-generator";
+/* ----------------------------------
+   Types
+---------------------------------- */
 
-type CardStyleState = CardStyleClasses & {
-    setBackgroundColor: (value: BackgroundColor) => void;
-    setTextColor: (value: TextColor) => void;
-    setBorderRadius: (value: BorderRadius) => void;
-    setPadding: (value: Padding) => void;
-    setShadow: (value: Shadow) => void;
-    setBorderWidth: (value: BorderWidth) => void;
-    setBorderColor: (value: BorderColor) => void;
-    setTitleFontSize: (value: FontSize) => void;
-    setTitleFontWeight: (value: FontWeight) => void;
-    setBodyFontSize: (value: FontSize) => void;
+type Unit = "px" | "rem";
+
+interface LengthValue {
+    value: number;
+    unit: Unit;
+}
+
+interface CardStyleState {
+    /* Colors */
+    backgroundColor: string;
+    textColor: string;
+
+    /* Spacing & shape */
+    padding: LengthValue;
+    borderRadius: LengthValue;
+
+    /* Shadow */
+    shadow: "none" | "sm" | "md" | "lg";
+
+    /* Border */
+    showBorder: boolean;
+    borderWidth: number;
+    borderColor: string;
+
+    /* Typography */
+    titleFontSize: number;
+    titleFontWeight: number;
+    bodyFontSize: number;
+
+    /* Actions */
+    setBackgroundColor: (value: string) => void;
+    setTextColor: (value: string) => void;
+
+    setPadding: (value: LengthValue) => void;
+    setBorderRadius: (value: LengthValue) => void;
+
+    setShadow: (value: CardStyleState["shadow"]) => void;
+
     setShowBorder: (value: boolean) => void;
-};
+    setBorderWidth: (value: number) => void;
+    setBorderColor: (value: string) => void;
+
+    setTitleFontSize: (value: number) => void;
+    setTitleFontWeight: (value: number) => void;
+    setBodyFontSize: (value: number) => void;
+}
 
 export const useBuilderStore = create<CardStyleState>(set => {
     return {
-        ...defaultCardStyles,
-        setBackgroundColor: value => {
-            return set({ backgroundColor: value });
+        backgroundColor: "#f3f4f6",
+        bodyFontSize: 14,
+        borderColor: "#e5e7eb",
+        borderRadius: { unit: "px", value: 12 },
+        borderWidth: 1,
+        padding: { unit: "px", value: 16 },
+        setBackgroundColor: backgroundColor => {
+            return set({ backgroundColor });
         },
-        setBodyFontSize: value => {
-            return set({ bodyFontSize: value });
+        setBodyFontSize: bodyFontSize => {
+            return set({ bodyFontSize });
         },
-        setBorderColor: value => {
-            return set({ borderColor: value });
+        setBorderColor: borderColor => {
+            return set({ borderColor });
         },
-        setBorderRadius: value => {
-            return set({ borderRadius: value });
+        setBorderRadius: borderRadius => {
+            return set({ borderRadius });
         },
-        setBorderWidth: value => {
-            return set({ borderWidth: value });
+        setBorderWidth: borderWidth => {
+            return set({ borderWidth });
         },
-        setPadding: value => {
-            return set({ padding: value });
+        setPadding: padding => {
+            return set({ padding });
         },
-        setShadow: value => {
-            return set({ shadow: value });
+        setShadow: shadow => {
+            return set({ shadow });
         },
-        setShowBorder: value => {
-            return set({ showBorder: value });
+        setShowBorder: showBorder => {
+            return set({ showBorder });
         },
-        setTextColor: value => {
-            return set({ textColor: value });
+        setTextColor: textColor => {
+            return set({ textColor });
         },
-        setTitleFontSize: value => {
-            return set({ titleFontSize: value });
+        setTitleFontSize: titleFontSize => {
+            return set({ titleFontSize });
         },
-        setTitleFontWeight: value => {
-            return set({ titleFontWeight: value });
+        setTitleFontWeight: titleFontWeight => {
+            return set({ titleFontWeight });
         },
+        shadow: "sm",
+        showBorder: false,
+        textColor: "#111827",
+        titleFontSize: 18,
+        titleFontWeight: 600,
     };
 });
