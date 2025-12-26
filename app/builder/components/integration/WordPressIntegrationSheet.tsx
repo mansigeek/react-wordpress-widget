@@ -3,11 +3,12 @@
 import * as React from "react";
 import { toast } from "sonner";
 
-import { generateWidgetScript } from "@/builder/export/widgetPackager";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+
+import { generateWidgetScript } from "../../export/widgetPackager";
 
 export function WordPressIntegrationSheet() {
     const [open, setOpen] = React.useState(false);
@@ -21,7 +22,8 @@ export function WordPressIntegrationSheet() {
 
             const script = generateWidgetScript();
 
-            const res = await fetch("/api/publish-widget", {
+            // Upload via server-side API (uses signed uploads, no preset needed)
+            const res = await fetch("/api/upload-cloudinary", {
                 body: JSON.stringify({ script }),
                 headers: {
                     "Content-Type": "application/json",
@@ -30,19 +32,25 @@ export function WordPressIntegrationSheet() {
             });
 
             if (!res.ok) {
-                throw new Error("Publish failed");
+                const errorData = await res.json().catch(() => {
+                    return { details: "Unknown error", error: "Upload failed" };
+                });
+                throw new Error(errorData.details || errorData.error || "Failed to upload to Cloudinary");
             }
 
             const data = await res.json();
 
+            if (!data.scriptTag) {
+                throw new Error("No script tag returned from server");
+            }
+
             setScriptTag(data.scriptTag);
             setGenerated(true);
-
             toast.success("Widget published to CDN");
         } catch (error) {
             // eslint-disable-next-line no-console
-            console.error(error);
-            toast.error("Failed to generate widget");
+            console.error("Upload error:", error);
+            toast.error(error instanceof Error ? error.message : "Failed to generate widget");
         } finally {
             setLoading(false);
         }
