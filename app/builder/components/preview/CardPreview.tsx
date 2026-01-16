@@ -1,11 +1,15 @@
 "use client";
 
-import { Calendar, User } from "lucide-react";
+import axios from "axios";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 import { useBuilderStore } from "@/builder/state/builder-store";
 import { registerStyle } from "@/builder/utils/style-registry";
 import imageLoader from "@/lib/image-loader";
+
+const LIMIT = 10;
 
 export function CardPreview() {
     const {
@@ -34,6 +38,47 @@ export function CardPreview() {
         showButton,
     } = useBuilderStore();
 
+    const [products, setProducts] = useState<any[]>([]);
+    const [page, setPage] = useState(1);
+    const [total, setTotal] = useState(0);
+    const [search, setSearch] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const skip = (page - 1) * LIMIT;
+    const totalPages = Math.ceil(total / LIMIT);
+
+    /* =======================
+       FETCH PRODUCTS
+    ======================== */
+    useEffect(() => {
+        const fetchProducts = async () => {
+            setLoading(true);
+            try {
+                const res = await axios.get("https://dummyjson.com/products/search", {
+                    params: {
+                        limit: LIMIT,
+                        q: search || undefined,
+                        select: "title,price,thumbnail",
+                        skip,
+                    },
+                });
+
+                setProducts(res.data.products);
+                setTotal(res.data.total);
+            } catch (error) {
+                console.error("Fetch error:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, [page, search]);
+
+    /* =======================
+       STYLE HELPERS
+    ======================== */
+
     const getFontFamilyValue = () => {
         switch (fontFamily) {
             case "serif":
@@ -49,18 +94,20 @@ export function CardPreview() {
 
     const getShadowValue = () => {
         switch (shadow) {
-            case "none":
-                return "none";
             case "sm":
-                return "0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)";
+                return "0 1px 3px rgba(0,0,0,0.1)";
             case "md":
-                return "0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.05)";
+                return "0 4px 6px rgba(0,0,0,0.15)";
             case "lg":
-                return "0 10px 15px -3px rgba(0,0,0,0.12), 0 4px 6px -2px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.06)";
+                return "0 10px 15px rgba(0,0,0,0.2)";
             default:
                 return "none";
         }
     };
+
+    /* =======================
+       STYLES
+    ======================== */
 
     const cardClass = registerStyle({
         backgroundColor,
@@ -69,142 +116,168 @@ export function CardPreview() {
         boxShadow: getShadowValue(),
         color: textColor,
         fontFamily: getFontFamilyValue(),
-        maxWidth: "32rem",
-        overflow: "hidden",
+        minWidth: "0",
         padding: `${padding.value}${padding.unit}`,
-        position: "relative",
-        transition: "all 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+        transition: "all 200ms ease",
+        width: "100%",
+    });
+
+    const imageClass = registerStyle({
+        aspectRatio: "16 / 9",
+        borderRadius: "8px",
+        marginBottom: "1rem",
+        objectFit: "cover",
+        width: "100%",
     });
 
     const titleClass = registerStyle({
         fontSize: `${titleFontSize}px`,
         fontWeight: titleFontWeight,
-        letterSpacing: "-0.01em",
-        lineHeight: "1.3",
-        marginBottom: "0.75rem",
+        marginBottom: "0.5rem",
     });
 
     const bodyClass = registerStyle({
         fontSize: `${bodyFontSize}px`,
-        letterSpacing: "0.01em",
-        lineHeight: "1.7",
         opacity: 0.85,
     });
 
-    const subtitleClass = registerStyle({
-        fontSize: `${Math.max(12, bodyFontSize - 2)}px`,
-        fontWeight: 500,
-        letterSpacing: "0.02em",
-        lineHeight: "1.5",
-        marginBottom: "0.5rem",
-        opacity: 0.7,
-        textTransform: "uppercase",
-    });
-
-    const metaClass = registerStyle({
-        alignItems: "center",
-        display: "flex",
-        fontSize: `${Math.max(11, bodyFontSize - 3)}px`,
-        gap: "0.5rem",
-        opacity: 0.65,
-    });
-
-    const tagClass = registerStyle({
-        backgroundColor: "rgba(0,0,0,0.05)",
-        borderRadius: "9999px",
-        display: "inline-block",
-        fontSize: `${Math.max(11, bodyFontSize - 3)}px`,
-        marginRight: "0.5rem",
-        marginTop: "0.5rem",
-        opacity: 0.75,
-        padding: "0.25rem 0.75rem",
-    });
-
     const buttonClass = registerStyle({
+        alignItems: "center",
         backgroundColor: textColor,
-        border: "none",
         borderRadius: "8px",
         color: backgroundColor,
-        cursor: "pointer",
-        display: "inline-block",
-        fontSize: `${Math.max(13, bodyFontSize - 1)}px`,
+        display: "inline-flex",
         fontWeight: 600,
+        justifyContent: "center",
         marginTop: "1rem",
-        padding: "0.75rem 1.5rem",
+        padding: "0.75rem 1.25rem",
         textDecoration: "none",
-        transition: "all 200ms ease",
+        width: "100%",
     });
 
-    const imageClass = registerStyle({
-        borderRadius: "8px",
-        display: "block",
-        height: "250px",
-        marginBottom: "1rem",
-        objectFit: "cover",
-        width: `100%`,
-    });
-
-    const tagsArray = tags
-        .split(",")
-        .map(tag => {
-            return tag.trim();
-        })
-        .filter(Boolean);
+    /* =======================
+       RENDER
+    ======================== */
 
     return (
-        <>
-            <div className={cardClass}>
-                {showImage && imageUrl && (
-                    <Image
-                        alt={title}
-                        className={imageClass}
-                        height={250}
-                        loader={imageLoader}
-                        src={imageUrl || ""}
-                        width={800}
-                    />
-                )}
-                {subtitle && <div className={subtitleClass}>{subtitle}</div>}
+        <div
+            data-widget-config={JSON.stringify({
+                apiUrl: "https://dummyjson.com/products/search",
+                features: {
+                    pagination: true,
+                    search: true,
+                },
+                limit: LIMIT,
+                styling: {
+                    buttonLink,
+                    buttonText,
+                    showButton,
+                    showImage,
+                },
+            })}
+            data-widget-container
+        >
+            {/* FILTER */}
+            <input
+                className="border px-3 py-2 rounded-md text-sm w-full"
+                data-search-input
+                onChange={e => {
+                    setPage(1);
+                    setSearch(e.target.value);
+                }}
+                placeholder="Search products..."
+                type="text"
+                value={search}
+            />
 
-                <h4 className={titleClass}>{title}</h4>
+            {/* GRID */}
+            <div className="gap-6 grid grid-cols-1 lg:grid-cols-3 sm:grid-cols-2" data-items-container>
+                {loading && <p data-loading-indicator>Loading...</p>}
 
-                {(author || date) && (
-                    <div className={metaClass} style={{ flexWrap: "wrap", gap: "1rem", marginBottom: "1rem" }}>
-                        {author && (
-                            <div style={{ alignItems: "center", display: "flex", gap: "0.375rem" }}>
-                                <User style={{ height: "14px", width: "14px" }} />
-                                <span>{author}</span>
+                {!loading &&
+                    products.map(product => {
+                        return (
+                            <div
+                                className={cardClass}
+                                data-item
+                                data-item-data={JSON.stringify({
+                                    id: product.id,
+                                    price: product.price,
+                                    thumbnail: product.thumbnail,
+                                    title: product.title,
+                                })}
+                                data-item-id={product.id}
+                                key={product.id}
+                            >
+                                {showImage && (
+                                    <Image
+                                        alt={product.title}
+                                        className={imageClass}
+                                        data-item-image
+                                        height={450}
+                                        loader={imageLoader}
+                                        src={product.thumbnail}
+                                        width={800}
+                                    />
+                                )}
+
+                                <h4 className={titleClass} data-item-title>
+                                    {product.title}
+                                </h4>
+
+                                <p className={bodyClass} data-item-price>
+                                    ${product.price}
+                                </p>
+
+                                {showButton && buttonText && (
+                                    <a className={buttonClass} data-item-button href={buttonLink}>
+                                        {buttonText}
+                                    </a>
+                                )}
                             </div>
-                        )}
-                        {date && (
-                            <div style={{ alignItems: "center", display: "flex", gap: "0.375rem" }}>
-                                <Calendar style={{ height: "14px", width: "14px" }} />
-                                <span>{date}</span>
-                            </div>
-                        )}
-                    </div>
-                )}
-
-                {description && <p className={bodyClass}>{description}</p>}
-
-                {tagsArray.length > 0 && (
-                    <div style={{ marginTop: "1rem" }}>
-                        {tagsArray.map((tag, index) => {
-                            return (
-                                <span className={tagClass} key={index}>
-                                    {tag}
-                                </span>
-                            );
-                        })}
-                    </div>
-                )}
-
-                {showButton && buttonText && (
-                    <a className={buttonClass} href={buttonLink} style={{ display: "inline-block" }}>
-                        {buttonText}
-                    </a>
-                )}
+                        );
+                    })}
             </div>
-        </>
+
+            {/* PAGINATION */}
+            {totalPages > 1 && (
+                <div
+                    className="flex gap-4 items-center justify-center"
+                    data-current-page={page}
+                    data-pagination-container
+                    data-total-pages={totalPages}
+                >
+                    <button
+                        className="border disabled:opacity-50 flex gap-1 items-center px-3 py-1 rounded-sm text-sm"
+                        data-pagination-prev
+                        disabled={page === 1}
+                        onClick={() => {
+                            return setPage(p => {
+                                return Math.max(1, p - 1);
+                            });
+                        }}
+                    >
+                        <ChevronLeft size={16} /> Prev
+                    </button>
+
+                    <span className="text-sm" data-pagination-info>
+                        Page {page} of {totalPages}
+                    </span>
+
+                    <button
+                        className="border disabled:opacity-50 flex gap-1 items-center px-3 py-1 rounded-sm text-sm"
+                        data-pagination-next
+                        disabled={page === totalPages}
+                        onClick={() => {
+                            return setPage(p => {
+                                return Math.min(totalPages, p + 1);
+                            });
+                        }}
+                    >
+                        Next <ChevronRight size={16} />
+                    </button>
+                </div>
+            )}
+        </div>
     );
 }

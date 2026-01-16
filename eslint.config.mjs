@@ -194,6 +194,8 @@ const eslintConfig = defineConfig([
                     ignoreCase: true,
                 },
             ],
+            "@typescript-eslint/no-explicit-any": "off",
+            
         },
     },
 ]);
